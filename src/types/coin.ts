@@ -1,4 +1,4 @@
-export type CoinSymbol = 'BTC' | 'ETH' | 'SOL';
+export type CoinSymbol = 'ALGO' | 'AVAX' | 'BTC' | 'ETH' | 'GRT' | 'LINK' | 'POL' | 'RENDER' | 'SOL' | 'UNI';
 
 export interface CoinConfig {
   symbol: CoinSymbol;
