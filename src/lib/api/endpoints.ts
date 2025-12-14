@@ -1,5 +1,6 @@
 export const ENDPOINTS = {
   SENTIMENT_SCORES: '/sentiment-scores',
+  SENTIMENT: '/v1/sentiment',
   DISCUSSION_TOPICS: '/discussion-topics',
   NEWS: '/v1/news',
 } as const;

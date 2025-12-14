@@ -38,10 +38,25 @@ async function apiPost<TRequest, TResponse>(
 export async function fetchSentiment(
   payload: CoinRequest
 ): Promise<SentimentResponse> {
-  return apiPost<CoinRequest, SentimentResponse>(
-    ENDPOINTS.SENTIMENT_SCORES,
-    payload
-  );
+  const params = new URLSearchParams({
+    coin_symbol: payload.coin_symbol,
+  });
+
+  const response = await fetch(`${NEWS_API_BASE_URL}${ENDPOINTS.SENTIMENT}?${params}`);
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData?.error?.message || `Sentiment API Error: ${response.status}`;
+    throw new Error(errorMessage);
+  }
+
+  const data = await response.json();
+
+  // Scale sentiment from 0-1 to 0-10 for UI display
+  return {
+    ...data,
+    sentiment_score: data.sentiment_score * 10,
+  };
 }
 
 export async function fetchTopics(payload: CoinRequest): Promise<TopicsResponse> {
