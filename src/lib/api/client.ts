@@ -1,5 +1,5 @@
 import { CoinRequest, SentimentResponse, TopicsResponse, NewsResponse } from '@/types/api';
-import { ENDPOINTS } from './endpoints';
+import { ENDPOINTS, NEWS_API_BASE_URL } from './endpoints';
 import { getMockData } from './mock-data';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
@@ -52,5 +52,19 @@ export async function fetchTopics(payload: CoinRequest): Promise<TopicsResponse>
 }
 
 export async function fetchNews(payload: CoinRequest): Promise<NewsResponse> {
-  return apiPost<CoinRequest, NewsResponse>(ENDPOINTS.NEWS, payload);
+  // News uses the real API with GET request
+  const params = new URLSearchParams({
+    coin_symbol: payload.coin_symbol,
+    time_window_latest: '24', // Last 24 hours
+  });
+
+  const response = await fetch(`${NEWS_API_BASE_URL}${ENDPOINTS.NEWS}?${params}`);
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData?.error?.message || `News API Error: ${response.status}`;
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
 }

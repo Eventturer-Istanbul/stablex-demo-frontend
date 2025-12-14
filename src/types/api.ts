@@ -22,6 +22,8 @@ export interface TopicsResponse {
 }
 
 export interface NewsResponse {
+  coin_name: string;
+  coin_symbol: string;
   news_summaries: string[];
   total_news_processed: number;
   time_window_start: string;

@@ -218,6 +218,8 @@ const mockTopics: Record<string, TopicsResponse> = {
 
 const mockNews: Record<string, NewsResponse> = {
   ALGO: {
+    coin_name: 'Algorand',
+    coin_symbol: 'ALGO',
     news_summaries: [
       'Algorand Foundation announces major partnership with central banks exploring CBDC implementations using Pure Proof of Stake consensus.',
       'AlgoKit 2.0 releases with enhanced Python SDK, making smart contract development more accessible for traditional developers.',
@@ -229,6 +231,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['CoinDesk', 'The Block', 'Algorand Foundation'],
   },
   AVAX: {
+    coin_name: 'Avalanche',
+    coin_symbol: 'AVAX',
     news_summaries: [
       'Avalanche subnets see 300% growth in enterprise adoption as major gaming studios deploy custom blockchain solutions.',
       'Avalanche Foundation launches $50M incentive program for RWA tokenization projects building on the network.',
@@ -240,6 +244,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['CoinDesk', 'The Block', 'Avalanche Blog'],
   },
   BTC: {
+    coin_name: 'Bitcoin',
+    coin_symbol: 'BTC',
     news_summaries: [
       'Bitcoin ETF sees record inflows as institutional interest reaches new heights. Major asset managers report unprecedented demand from retirement funds and sovereign wealth entities.',
       'Lightning Network capacity surpasses 5,000 BTC milestone, enabling faster and cheaper transactions for everyday payments across the globe.',
@@ -251,6 +257,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['CoinDesk', 'The Block', 'Decrypt'],
   },
   ETH: {
+    coin_name: 'Ethereum',
+    coin_symbol: 'ETH',
     news_summaries: [
       'Ethereum Layer 2 solutions process more transactions than mainnet for the first time, marking a significant scaling milestone.',
       'Major DeFi protocols announce integration with new account abstraction standards, improving user onboarding experience.',
@@ -262,6 +270,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['Bankless', 'The Defiant', 'CoinDesk'],
   },
   GRT: {
+    coin_name: 'The Graph',
+    coin_symbol: 'GRT',
     news_summaries: [
       'The Graph announces expansion to 50+ blockchain networks, becoming the go-to indexing solution for multi-chain applications.',
       'Query fees on The Graph network reach all-time highs as AI applications increasingly rely on decentralized data infrastructure.',
@@ -273,6 +283,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['The Block', 'CoinDesk', 'The Graph Blog'],
   },
   LINK: {
+    coin_name: 'Chainlink',
+    coin_symbol: 'LINK',
     news_summaries: [
       'Chainlink CCIP processes $10B in cross-chain value transfers as major DeFi protocols adopt the interoperability standard.',
       'Swift announces expanded pilot program with Chainlink, testing tokenized asset settlement across 12 major banks.',
@@ -284,6 +296,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['CoinDesk', 'The Block', 'Chainlink Blog'],
   },
   POL: {
+    coin_name: 'Polygon',
+    coin_symbol: 'POL',
     news_summaries: [
       'Polygon zkEVM achieves full Ethereum equivalence, enabling seamless smart contract deployment without code modifications.',
       'AggLayer launches in beta, connecting Polygon ecosystem chains with unified liquidity and cross-chain messaging.',
@@ -295,6 +309,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['CoinDesk', 'The Block', 'Polygon Blog'],
   },
   RENDER: {
+    coin_name: 'Render Network',
+    coin_symbol: 'RENDER',
     news_summaries: [
       'Render Network partners with major Hollywood studios for distributed rendering of upcoming blockbuster visual effects.',
       'AI training workloads on Render Network increase 500% as developers seek decentralized GPU compute alternatives.',
@@ -306,6 +322,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['CoinDesk', 'The Block', 'OTOY Blog'],
   },
   SOL: {
+    coin_name: 'Solana',
+    coin_symbol: 'SOL',
     news_summaries: [
       'Solana processes record 65,000 TPS during stress test as Firedancer validator client enters final testing phase.',
       'Major gaming studios announce exclusive partnerships with Solana for blockchain-integrated mobile games.',
@@ -317,6 +335,8 @@ const mockNews: Record<string, NewsResponse> = {
     news_sources: ['Solana Daily', 'CoinDesk', 'The Block'],
   },
   UNI: {
+    coin_name: 'Uniswap',
+    coin_symbol: 'UNI',
     news_summaries: [
       'Uniswap V4 hooks enable custom AMM logic, sparking innovation wave with 100+ new liquidity pool designs.',
       'Uniswap governance approves fee switch activation, directing 10% of protocol fees to UNI stakers.',
