@@ -50,13 +50,7 @@ export async function fetchSentiment(
     throw new Error(errorMessage);
   }
 
-  const data = await response.json();
-
-  // Scale sentiment from 0-1 to 0-10 for UI display
-  return {
-    ...data,
-    sentiment_score: data.sentiment_score * 10,
-  };
+  return response.json();
 }
 
 export async function fetchTopics(payload: CoinRequest): Promise<TopicsResponse> {
