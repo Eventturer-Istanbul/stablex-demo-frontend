@@ -54,10 +54,19 @@ export async function fetchSentiment(
 }
 
 export async function fetchTopics(payload: CoinRequest): Promise<TopicsResponse> {
-  return apiPost<CoinRequest, TopicsResponse>(
-    ENDPOINTS.DISCUSSION_TOPICS,
-    payload
-  );
+  const params = new URLSearchParams({
+    coin_symbol: payload.coin_symbol,
+  });
+
+  const response = await fetch(`${NEWS_API_BASE_URL}${ENDPOINTS.TOPICS}?${params}`);
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData?.error?.message || `Topics API Error: ${response.status}`;
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
 }
 
 export async function fetchNews(payload: CoinRequest): Promise<NewsResponse> {

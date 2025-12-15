@@ -39,8 +39,8 @@ export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardPro
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2 mb-4">
-          {topics.map((topic, index) => (
-            <Chip key={index}>{topic}</Chip>
+          {topics.map((topic) => (
+            <Chip key={topic.rank}>{topic.text}</Chip>
           ))}
         </div>
         <p className="text-sm text-gray-600 dark:text-gray-400">

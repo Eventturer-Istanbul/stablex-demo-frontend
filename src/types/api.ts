@@ -14,8 +14,17 @@ export interface SentimentResponse {
   time_window_end: string;
 }
 
+export interface Topic {
+  rank: number;
+  text: string;
+  sentiment: 'positive' | 'negative' | 'neutral' | 'mixed';
+  tweet_count: number;
+}
+
 export interface TopicsResponse {
-  topics: string[];
+  coin_name: string;
+  coin_symbol: string;
+  topics: Topic[];
   total_tweets_processed: number;
   time_window_start: string;
   time_window_end: string;
