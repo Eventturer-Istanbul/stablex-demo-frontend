@@ -4,6 +4,7 @@ export const ENDPOINTS = {
   DISCUSSION_TOPICS: '/discussion-topics',
   TOPICS: '/v1/discussion_topics',
   NEWS: '/v1/news',
+  DESCRIPTION: '/v1/description',
 } as const;
 
 // News API has its own base URL

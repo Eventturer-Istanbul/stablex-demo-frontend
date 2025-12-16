@@ -6,11 +6,12 @@
 
 ## Overview
 
-The StableX Insights API provides cryptocurrency intelligence through three main endpoints:
+The StableX Insights API provides cryptocurrency intelligence through four main endpoints:
 
 - **News API** (`/v1/news`) - AI-generated news summaries aggregated from multiple sources
 - **Sentiment API** (`/v1/sentiment`) - Real-time sentiment scores derived from social media analysis
 - **Discussion Topics API** (`/v1/discussion_topics`) - Trending discussion topics from social media
+- **Description API** (`/v1/description`) - Coin descriptions and information
 
 ---
 
@@ -67,11 +68,11 @@ GET /v1/news
 | SOL | Solana |
 | LINK | Chainlink |
 | UNI | Uniswap |
-| POL | Polygon |
 | AVAX | Avalanche |
-| RENDER | Render Network |
-| GRT | The Graph |
-| ALGO | Algorand |
+| XRP | XRP |
+| LTC | Litecoin |
+| USDT | Tether |
+| DOGE | Dogecoin |
 
 ---
 
@@ -171,6 +172,43 @@ GET /v1/discussion_topics
 
 ---
 
+### Get Description
+
+Retrieve description for a specific cryptocurrency.
+
+```
+GET /v1/description
+```
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `coin_symbol` | string | Yes* | Coin ticker (e.g., `BTC`, `ETH`, `SOL`) |
+| `coin_name` | string | Yes* | Coin full name (e.g., `Bitcoin`, `Ethereum`) |
+
+*Provide either `coin_symbol` OR `coin_name`, not both.
+
+#### Response Format
+
+```json
+{
+  "coin_name": "Bitcoin",
+  "coin_symbol": "BTC",
+  "description": "Bitcoin, bankalar veya devletler gibi aracı kurumlar olmadan eşler arası işlemleri mümkün kılan ilk merkeziyetsiz kripto paradır..."
+}
+```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `coin_name` | string | Full cryptocurrency name |
+| `coin_symbol` | string | Coin ticker symbol |
+| `description` | string | Coin description text (may be null if not available) |
+
+---
+
 ## Examples
 
 ### News Examples
@@ -231,6 +269,20 @@ curl "https://stablex-news-api.up.railway.app/v1/discussion_topics?coin_name=Eth
 
 ```bash
 curl "https://stablex-news-api.up.railway.app/v1/discussion_topics?coin_symbol=SOL&time_window_start=2025-12-14T00:00:00Z"
+```
+
+### Description Examples
+
+### Get Bitcoin Description
+
+```bash
+curl "https://stablex-news-api.up.railway.app/v1/description?coin_symbol=BTC"
+```
+
+### Get Ethereum Description by Name
+
+```bash
+curl "https://stablex-news-api.up.railway.app/v1/description?coin_name=Ethereum"
 ```
 
 ---
@@ -323,6 +375,24 @@ curl "https://stablex-news-api.up.railway.app/v1/discussion_topics?coin_symbol=S
 | `total_tweets_processed` | integer | Number of tweets analyzed |
 | `topics` | array | Array of discussion topics with rank, text, sentiment, tweet_count |
 
+### Description Response
+
+```json
+{
+  "coin_name": "Bitcoin",
+  "coin_symbol": "BTC",
+  "description": "Bitcoin, bankalar veya devletler gibi aracı kurumlar olmadan eşler arası işlemleri mümkün kılan ilk merkeziyetsiz kripto paradır..."
+}
+```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `coin_name` | string | Full cryptocurrency name |
+| `coin_symbol` | string | Coin ticker symbol |
+| `description` | string | Coin description text (null if not available) |
+
 ---
 
 ## Error Responses
@@ -362,7 +432,7 @@ curl "https://stablex-news-api.up.railway.app/v1/discussion_topics?coin_symbol=S
   "error": {
     "name": "ValidationError",
     "code": "VALIDATION_ERROR",
-    "message": "Unknown coin: XYZ. Supported coins: BTC, ETH, SOL, LINK, UNI, POL, AVAX, RENDER, GRT, ALGO",
+    "message": "Unknown coin: XYZ. Supported coins: BTC, ETH, SOL, LINK, UNI, AVAX, XRP, LTC, USDT, DOGE",
     "field": "coin_symbol",
     "timestamp": "2025-12-14T20:00:00.000Z"
   }
@@ -422,6 +492,13 @@ const topicsResponse = await fetch(
 );
 const topicsData = await topicsResponse.json();
 console.log(`Topics: ${topicsData.topics.map(t => t.text).join(', ')}`);
+
+// Get description
+const descResponse = await fetch(
+  'https://stablex-news-api.up.railway.app/v1/description?coin_symbol=BTC'
+);
+const descData = await descResponse.json();
+console.log(`Description: ${descData.description}`);
 ```
 
 ### Python (requests)
@@ -452,6 +529,14 @@ topics_response = requests.get(
 )
 topics_data = topics_response.json()
 print(f"Topics: {[t['text'] for t in topics_data['topics']]}")
+
+# Get description
+desc_response = requests.get(
+    'https://stablex-news-api.up.railway.app/v1/description',
+    params={'coin_symbol': 'BTC'}
+)
+desc_data = desc_response.json()
+print(f"Description: {desc_data['description']}")
 ```
 
 ### Node.js (axios)
@@ -476,6 +561,12 @@ const { data: topics } = await axios.get('https://stablex-news-api.up.railway.ap
   params: { coin_symbol: 'ETH' }
 });
 console.log(`Top topic: ${topics.topics[0]?.text}`);
+
+// Get description
+const { data: desc } = await axios.get('https://stablex-news-api.up.railway.app/v1/description', {
+  params: { coin_symbol: 'ETH' }
+});
+console.log(`Description: ${desc.description}`);
 ```
 
 ---

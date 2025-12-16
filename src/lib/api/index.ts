@@ -1,2 +1,2 @@
-export { fetchSentiment, fetchTopics, fetchNews } from './client';
+export { fetchSentiment, fetchTopics, fetchNews, fetchDescription } from './client';
 export { ENDPOINTS } from './endpoints';

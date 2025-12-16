@@ -39,3 +39,9 @@ export interface NewsResponse {
   time_window_end: string;
   news_sources: string[]; // Ignored in UI per requirements
 }
+
+export interface DescriptionResponse {
+  coin_name: string;
+  coin_symbol: string;
+  description: string | null;
+}

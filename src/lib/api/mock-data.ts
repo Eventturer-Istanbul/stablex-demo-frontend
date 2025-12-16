@@ -1,4 +1,4 @@
-import { SentimentResponse, TopicsResponse, NewsResponse } from '@/types/api';
+import { SentimentResponse, TopicsResponse, NewsResponse, DescriptionResponse } from '@/types/api';
 
 const mockSentiment: Record<string, SentimentResponse> = {
   BTC: {
@@ -304,10 +304,63 @@ const mockNews: Record<string, NewsResponse> = {
   },
 };
 
+const mockDescription: Record<string, DescriptionResponse> = {
+  BTC: {
+    coin_name: 'Bitcoin',
+    coin_symbol: 'BTC',
+    description: 'Bitcoin is the first decentralized cryptocurrency, enabling peer-to-peer transactions without intermediaries like banks or governments. Created in 2009 by the pseudonymous Satoshi Nakamoto, it operates on a proof-of-work blockchain and has a fixed supply of 21 million coins.',
+  },
+  ETH: {
+    coin_name: 'Ethereum',
+    coin_symbol: 'ETH',
+    description: 'Ethereum is a decentralized blockchain platform that enables smart contracts and decentralized applications (dApps). Founded by Vitalik Buterin in 2015, it powers the largest ecosystem of DeFi protocols, NFTs, and Web3 applications.',
+  },
+  SOL: {
+    coin_name: 'Solana',
+    coin_symbol: 'SOL',
+    description: 'Solana is a high-performance blockchain known for its speed and low transaction costs. Using a unique proof-of-history consensus combined with proof-of-stake, it can process thousands of transactions per second, making it popular for DeFi and NFT applications.',
+  },
+  LINK: {
+    coin_name: 'Chainlink',
+    coin_symbol: 'LINK',
+    description: 'Chainlink is a decentralized oracle network that provides real-world data to smart contracts on the blockchain. It enables smart contracts to securely interact with external data feeds, APIs, and payment systems.',
+  },
+  UNI: {
+    coin_name: 'Uniswap',
+    coin_symbol: 'UNI',
+    description: 'Uniswap is the leading decentralized exchange (DEX) protocol built on Ethereum. It pioneered the automated market maker (AMM) model, allowing users to swap tokens without intermediaries and earn fees by providing liquidity.',
+  },
+  AVAX: {
+    coin_name: 'Avalanche',
+    coin_symbol: 'AVAX',
+    description: 'Avalanche is a layer-1 blockchain platform known for its high throughput and low latency. It features a unique subnet architecture that allows for customizable blockchains, making it popular for enterprise and DeFi applications.',
+  },
+  XRP: {
+    coin_name: 'XRP',
+    coin_symbol: 'XRP',
+    description: 'XRP is a digital asset designed for fast, low-cost cross-border payments. Created by Ripple Labs, it serves as a bridge currency for financial institutions to settle international transactions in seconds.',
+  },
+  LTC: {
+    coin_name: 'Litecoin',
+    coin_symbol: 'LTC',
+    description: 'Litecoin is a peer-to-peer cryptocurrency created in 2011 as a "lighter" version of Bitcoin. It offers faster transaction confirmation times and uses a different hashing algorithm (Scrypt), making it suitable for everyday payments.',
+  },
+  USDT: {
+    coin_name: 'Tether',
+    coin_symbol: 'USDT',
+    description: 'Tether (USDT) is the largest stablecoin by market cap, pegged 1:1 to the US dollar. It provides traders and users with a stable store of value in the volatile crypto market and is widely used for trading and transfers.',
+  },
+  DOGE: {
+    coin_name: 'Dogecoin',
+    coin_symbol: 'DOGE',
+    description: 'Dogecoin started as a meme cryptocurrency in 2013 but has grown into a widely recognized digital currency. Known for its Shiba Inu mascot and strong community, it is increasingly accepted as a payment method by merchants worldwide.',
+  },
+};
+
 export function getMockData(
   endpoint: string,
   coinSymbol: string
-): SentimentResponse | TopicsResponse | NewsResponse {
+): SentimentResponse | TopicsResponse | NewsResponse | DescriptionResponse {
   switch (endpoint) {
     case '/sentiment-scores':
       return mockSentiment[coinSymbol] || mockSentiment['BTC'];
@@ -315,6 +368,8 @@ export function getMockData(
       return mockTopics[coinSymbol] || mockTopics['BTC'];
     case '/news':
       return mockNews[coinSymbol] || mockNews['BTC'];
+    case '/description':
+      return mockDescription[coinSymbol] || mockDescription['BTC'];
     default:
       throw new Error(`Unknown endpoint: ${endpoint}`);
   }

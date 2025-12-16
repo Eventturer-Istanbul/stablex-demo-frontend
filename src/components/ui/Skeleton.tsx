@@ -79,3 +79,16 @@ export function NewsSkeleton() {
     </div>
   );
 }
+
+export function DescriptionSkeleton() {
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+      <Skeleton className="mb-4 h-5 w-28" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+      </div>
+    </div>
+  );
+}
