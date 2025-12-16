@@ -2,18 +2,6 @@ import { CoinConfig } from '@/types/coin';
 
 export const COINS: CoinConfig[] = [
   {
-    symbol: 'ALGO',
-    name: 'Algorand',
-    icon: '/images/coins/algo.svg',
-    color: '#000000',
-  },
-  {
-    symbol: 'AVAX',
-    name: 'Avalanche',
-    icon: '/images/coins/avax.svg',
-    color: '#E84142',
-  },
-  {
     symbol: 'BTC',
     name: 'Bitcoin',
     icon: '/images/coins/btc.svg',
@@ -26,10 +14,10 @@ export const COINS: CoinConfig[] = [
     color: '#627EEA',
   },
   {
-    symbol: 'GRT',
-    name: 'The Graph',
-    icon: '/images/coins/grt.svg',
-    color: '#6747ED',
+    symbol: 'SOL',
+    name: 'Solana',
+    icon: '/images/coins/sol.svg',
+    color: '#00FFA3',
   },
   {
     symbol: 'LINK',
@@ -38,27 +26,39 @@ export const COINS: CoinConfig[] = [
     color: '#375BD2',
   },
   {
-    symbol: 'POL',
-    name: 'Polygon',
-    icon: '/images/coins/pol.svg',
-    color: '#8247E5',
-  },
-  {
-    symbol: 'RENDER',
-    name: 'Render Network',
-    icon: '/images/coins/render.svg',
-    color: '#000000',
-  },
-  {
-    symbol: 'SOL',
-    name: 'Solana',
-    icon: '/images/coins/sol.svg',
-    color: '#00FFA3',
-  },
-  {
     symbol: 'UNI',
     name: 'Uniswap',
     icon: '/images/coins/uni.svg',
     color: '#FF007A',
+  },
+  {
+    symbol: 'AVAX',
+    name: 'Avalanche',
+    icon: '/images/coins/avax.svg',
+    color: '#E84142',
+  },
+  {
+    symbol: 'XRP',
+    name: 'XRP',
+    icon: '/images/coins/xrp.svg',
+    color: '#23292F',
+  },
+  {
+    symbol: 'LTC',
+    name: 'Litecoin',
+    icon: '/images/coins/ltc.svg',
+    color: '#345D9D',
+  },
+  {
+    symbol: 'USDT',
+    name: 'Tether',
+    icon: '/images/coins/usdt.svg',
+    color: '#26A17B',
+  },
+  {
+    symbol: 'DOGE',
+    name: 'Dogecoin',
+    icon: '/images/coins/doge.svg',
+    color: '#C2A633',
   },
 ];
