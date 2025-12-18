@@ -26,21 +26,25 @@ export function CoinHeader({ coin, isExpanded, onClick }: CoinHeaderProps) {
           className="w-10 h-10 rounded-full flex items-center justify-center"
           style={{ backgroundColor: `${coin.color}20` }}
         >
-          <Image
-            src={coin.icon}
-            alt={coin.name}
-            width={24}
-            height={24}
-            className="w-6 h-6"
-          />
+          {coin.icon ? (
+            <Image
+              src={coin.icon}
+              alt={coin.name}
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
+          ) : (
+            <span
+              className="w-6 h-6 rounded-full"
+              style={{ backgroundColor: coin.color }}
+            />
+          )}
         </div>
         <div className="text-left">
           <h2 className="font-semibold text-gray-900 dark:text-white">
             {coin.name}
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {coin.symbol}
-          </p>
         </div>
       </div>
       <svg

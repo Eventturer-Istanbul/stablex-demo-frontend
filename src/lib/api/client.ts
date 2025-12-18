@@ -1,134 +1,142 @@
 import { CoinRequest, SentimentResponse, TopicsResponse, NewsResponse, DescriptionResponse } from '@/types/api';
-import { ENDPOINTS, NEWS_API_BASE_URL } from './endpoints';
-import { getMockData } from './mock-data';
+import { supabase } from '@/lib/supabase/client';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' || !API_BASE_URL;
-
-// Coins supported by the real API
-const API_SUPPORTED_COINS = ['BTC', 'ETH', 'SOL', 'LINK', 'UNI', 'AVAX', 'XRP', 'LTC', 'USDT', 'DOGE'];
-
-function isApiSupported(coinSymbol: string): boolean {
-  return API_SUPPORTED_COINS.includes(coinSymbol);
-}
-
-async function simulateDelay(): Promise<void> {
-  const delay = 800 + Math.random() * 400; // 800-1200ms
-  await new Promise((resolve) => setTimeout(resolve, delay));
-}
-
-async function apiPost<TRequest, TResponse>(
-  endpoint: string,
-  payload: TRequest
-): Promise<TResponse> {
-  if (USE_MOCK) {
-    await simulateDelay();
-    const coinSymbol = (payload as CoinRequest).coin_symbol;
-    return getMockData(endpoint, coinSymbol) as TResponse;
-  }
-
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new Error(`API Error: ${response.status} ${response.statusText}`);
-  }
-
-  return response.json();
-}
+// All data comes from main_summaries table only
+// coin_symbol is now token_id (as string)
 
 export async function fetchSentiment(
   payload: CoinRequest
 ): Promise<SentimentResponse> {
-  // Use mock data for unsupported coins
-  if (!isApiSupported(payload.coin_symbol)) {
-    await simulateDelay();
-    return getMockData('/sentiment-scores', payload.coin_symbol) as SentimentResponse;
+  const tokenId = parseInt(payload.coin_symbol, 10);
+
+  const { data, error } = await supabase
+    .from('main_summaries')
+    .select('token_name, sentiment_score, created_at')
+    .eq('token_id', tokenId)
+    .single();
+
+  const now = new Date();
+  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+  if (error || !data) {
+    return {
+      coin_name: '',
+      coin_symbol: payload.coin_symbol,
+      sentiment_score: 5,
+      total_tweets_processed: 0,
+      time_window_start: yesterday.toISOString(),
+      time_window_end: now.toISOString(),
+    };
   }
 
-  const params = new URLSearchParams({
+  return {
+    coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
-  });
-
-  const response = await fetch(`${NEWS_API_BASE_URL}${ENDPOINTS.SENTIMENT}?${params}`);
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const errorMessage = errorData?.error?.message || `Sentiment API Error: ${response.status}`;
-    throw new Error(errorMessage);
-  }
-
-  return response.json();
+    sentiment_score: parseFloat(data.sentiment_score) || 5,
+    total_tweets_processed: 0,
+    time_window_start: yesterday.toISOString(),
+    time_window_end: data.created_at || now.toISOString(),
+  };
 }
 
 export async function fetchTopics(payload: CoinRequest): Promise<TopicsResponse> {
-  // Use mock data for unsupported coins
-  if (!isApiSupported(payload.coin_symbol)) {
-    await simulateDelay();
-    return getMockData('/discussion-topics', payload.coin_symbol) as TopicsResponse;
+  const tokenId = parseInt(payload.coin_symbol, 10);
+
+  const { data, error } = await supabase
+    .from('main_summaries')
+    .select('token_name, discussion_topics, created_at')
+    .eq('token_id', tokenId)
+    .single();
+
+  const now = new Date();
+  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+  if (error || !data || !data.discussion_topics) {
+    return {
+      coin_name: '',
+      coin_symbol: payload.coin_symbol,
+      topics: [],
+      total_tweets_processed: 0,
+      time_window_start: yesterday.toISOString(),
+      time_window_end: now.toISOString(),
+    };
   }
 
-  const params = new URLSearchParams({
+  const topics = (data.discussion_topics as string[]).map((text, index) => ({
+    rank: index + 1,
+    text,
+    sentiment: 'neutral' as const,
+    tweet_count: 0,
+  }));
+
+  return {
+    coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
-  });
-
-  const response = await fetch(`${NEWS_API_BASE_URL}${ENDPOINTS.TOPICS}?${params}`);
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const errorMessage = errorData?.error?.message || `Topics API Error: ${response.status}`;
-    throw new Error(errorMessage);
-  }
-
-  return response.json();
+    topics,
+    total_tweets_processed: topics.length,
+    time_window_start: yesterday.toISOString(),
+    time_window_end: data.created_at || now.toISOString(),
+  };
 }
 
 export async function fetchNews(payload: CoinRequest): Promise<NewsResponse> {
-  // Use mock data for unsupported coins
-  if (!isApiSupported(payload.coin_symbol)) {
-    await simulateDelay();
-    return getMockData('/news', payload.coin_symbol) as NewsResponse;
+  const tokenId = parseInt(payload.coin_symbol, 10);
+
+  const { data, error } = await supabase
+    .from('main_summaries')
+    .select('token_name, news_output, created_at')
+    .eq('token_id', tokenId)
+    .single();
+
+  const now = new Date();
+  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+  if (error || !data) {
+    return {
+      coin_name: '',
+      coin_symbol: payload.coin_symbol,
+      news_summaries: [],
+      total_news_processed: 0,
+      time_window_start: yesterday.toISOString(),
+      time_window_end: now.toISOString(),
+      news_sources: [],
+    };
   }
 
-  const params = new URLSearchParams({
+  const newsOutput = data.news_output as { bullets?: string[] } | null;
+  const bullets = newsOutput?.bullets || [];
+
+  return {
+    coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
-    time_window_latest: '24', // Last 24 hours
-  });
-
-  const response = await fetch(`${NEWS_API_BASE_URL}${ENDPOINTS.NEWS}?${params}`);
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const errorMessage = errorData?.error?.message || `News API Error: ${response.status}`;
-    throw new Error(errorMessage);
-  }
-
-  return response.json();
+    news_summaries: bullets,
+    total_news_processed: bullets.length,
+    time_window_start: yesterday.toISOString(),
+    time_window_end: data.created_at || now.toISOString(),
+    news_sources: [],
+  };
 }
 
 export async function fetchDescription(payload: CoinRequest): Promise<DescriptionResponse> {
-  // Use mock data for unsupported coins
-  if (!isApiSupported(payload.coin_symbol)) {
-    await simulateDelay();
-    return getMockData('/description', payload.coin_symbol) as DescriptionResponse;
+  const tokenId = parseInt(payload.coin_symbol, 10);
+
+  const { data, error } = await supabase
+    .from('main_summaries')
+    .select('token_name, description')
+    .eq('token_id', tokenId)
+    .single();
+
+  if (error || !data) {
+    return {
+      coin_name: '',
+      coin_symbol: payload.coin_symbol,
+      description: null,
+    };
   }
 
-  const params = new URLSearchParams({
+  return {
+    coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
-  });
-
-  const response = await fetch(`${NEWS_API_BASE_URL}${ENDPOINTS.DESCRIPTION}?${params}`);
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const errorMessage = errorData?.error?.message || `Description API Error: ${response.status}`;
-    throw new Error(errorMessage);
-  }
-
-  return response.json();
+    description: data.description || null,
+  };
 }

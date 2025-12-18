@@ -47,9 +47,9 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
             </div>
           ))}
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+{/* <p className="text-sm text-gray-600 dark:text-gray-400">
           {total_news_processed} news articles processed
-        </p>
+        </p> */}
       </CardContent>
       <CardFooter>
         <p className="text-xs text-gray-500 dark:text-gray-500">

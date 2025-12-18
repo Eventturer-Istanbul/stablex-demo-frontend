@@ -43,9 +43,9 @@ export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardPro
             <Chip key={topic.rank}>{topic.text}</Chip>
           ))}
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+{/* <p className="text-sm text-gray-600 dark:text-gray-400">
           {total_tweets_processed.toLocaleString()} tweets processed
-        </p>
+        </p> */}
       </CardContent>
       <CardFooter>
         <p className="text-xs text-gray-500 dark:text-gray-500">

@@ -1,7 +1,7 @@
-export type CoinSymbol = 'AVAX' | 'BTC' | 'DOGE' | 'ETH' | 'LINK' | 'LTC' | 'SOL' | 'UNI' | 'USDT' | 'XRP';
+export type CoinSymbol = string;
 
 export interface CoinConfig {
-  symbol: CoinSymbol;
+  symbol: string;
   name: string;
   icon: string;
   color: string;

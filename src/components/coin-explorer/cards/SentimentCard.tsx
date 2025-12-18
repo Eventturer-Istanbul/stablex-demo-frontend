@@ -50,9 +50,9 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
           </span>
           <span className="text-2xl text-gray-400 dark:text-gray-500">/ 10</span>
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+{/* <p className="text-sm text-gray-600 dark:text-gray-400">
           {total_tweets_processed.toLocaleString()} tweets processed
-        </p>
+        </p> */}
       </CardContent>
       <CardFooter>
         <p className="text-xs text-gray-500 dark:text-gray-500">
