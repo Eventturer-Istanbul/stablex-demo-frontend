@@ -1,0 +1,21 @@
+<svg viewBox="0 0 2500 2500" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="a" x1="1250" y1="0" x2="1250" y2="2500" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#F89791"/>
+<stop offset="1" stop-color="#F7C882"/>
+</linearGradient>
+<linearGradient id="b" x1="1009" y1="250" x2="1009" y2="1250" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#77D4FF"/>
+<stop offset="1" stop-color="#93D6F2" stop-opacity="0.898"/>
+</linearGradient>
+<linearGradient id="c" x1="1489" y1="250" x2="1489" y2="1250" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#506AAC"/>
+<stop offset="1" stop-color="#96CFEF" stop-opacity="0.82"/>
+</linearGradient>
+</defs>
+<circle cx="1250" cy="1250" r="1250" fill="url(#a)"/>
+<polygon fill="url(#b)" points="1249,300 769,1036 1249,1310"/>
+<polygon fill="url(#c)" points="1249,1310 1729,1036 1249,300"/>
+<polygon fill="#AEE6F9" fill-opacity="0.86" points="1250,833 692,1154 1249,1472 1805,1154"/>
+<path fill="#7985AB" d="M1249,1472l-557-318l-15,23c-171,263-133,607,92,828c265,260,695,260,960,0c225-221,263-565,92-828l-15-23L1249,1472z" opacity="0.7"/>
+</svg>
