@@ -31,12 +31,23 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
 
   const { sentiment_score, total_tweets_processed, time_window_start, time_window_end } = state.data!;
 
-  // Determine color based on score
+  // Determine color based on score (-5 to 5 scale)
   const getScoreColor = (score: number) => {
-    if (score >= 7) return 'text-green-500';
-    if (score >= 4) return 'text-yellow-500';
+    if (score >= 2) return 'text-green-500';
+    if (score >= -2) return 'text-yellow-500';
     return 'text-red-500';
   };
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 3) return 'Very Positive';
+    if (score >= 1) return 'Positive';
+    if (score >= -1) return 'Neutral';
+    if (score >= -3) return 'Negative';
+    return 'Very Negative';
+  };
+
+  // Calculate bar position: -5 = 0%, 0 = 50%, 5 = 100%
+  const barPosition = ((sentiment_score + 5) / 10) * 100;
 
   return (
     <Card>
@@ -44,15 +55,31 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
         <CardTitle>Sentiment</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-baseline gap-2 mb-4">
-          <span className={`text-5xl font-bold ${getScoreColor(sentiment_score)}`}>
-            {sentiment_score.toFixed(1)}
+        <div className="flex items-baseline gap-3 mb-2">
+          <span className={`text-4xl font-bold ${getScoreColor(sentiment_score)}`}>
+            {sentiment_score >= 0 ? '+' : ''}{sentiment_score.toFixed(1)}
           </span>
-          <span className="text-2xl text-gray-400 dark:text-gray-500">/ 10</span>
+          <span className={`text-sm font-medium ${getScoreColor(sentiment_score)}`}>
+            {getScoreLabel(sentiment_score)}
+          </span>
         </div>
-{/* <p className="text-sm text-gray-600 dark:text-gray-400">
-          {total_tweets_processed.toLocaleString()} tweets processed
-        </p> */}
+
+        {/* Sentiment bar visualization */}
+        <div className="mt-4">
+          <div className="relative h-3 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500">
+            {/* Score indicator */}
+            <div
+              className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-gray-800 dark:border-white shadow-lg"
+              style={{ left: `calc(${Math.max(0, Math.min(100, barPosition))}% - 8px)` }}
+            />
+          </div>
+          {/* Scale labels */}
+          <div className="flex justify-between mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <span>-5</span>
+            <span>0</span>
+            <span>+5</span>
+          </div>
+        </div>
       </CardContent>
       <CardFooter>
         <p className="text-xs text-gray-500 dark:text-gray-500">

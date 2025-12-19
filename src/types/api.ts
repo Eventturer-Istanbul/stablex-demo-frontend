@@ -8,7 +8,7 @@ export interface CoinRequest {
 export interface SentimentResponse {
   coin_name: string;
   coin_symbol: string;
-  sentiment_score: number; // 0-10 scale
+  sentiment_score: number; // -5 to 5 scale
   total_tweets_processed: number;
   time_window_start: string;
   time_window_end: string;

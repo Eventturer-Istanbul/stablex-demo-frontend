@@ -4,7 +4,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   BTC: {
     coin_name: 'Bitcoin',
     coin_symbol: 'BTC',
-    sentiment_score: 7.8,
+    sentiment_score: 2.8,
     total_tweets_processed: 15234,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -12,7 +12,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   ETH: {
     coin_name: 'Ethereum',
     coin_symbol: 'ETH',
-    sentiment_score: 6.5,
+    sentiment_score: 1.5,
     total_tweets_processed: 12456,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -20,7 +20,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   SOL: {
     coin_name: 'Solana',
     coin_symbol: 'SOL',
-    sentiment_score: 8.2,
+    sentiment_score: 3.2,
     total_tweets_processed: 8932,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -28,7 +28,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   LINK: {
     coin_name: 'Chainlink',
     coin_symbol: 'LINK',
-    sentiment_score: 7.9,
+    sentiment_score: 2.9,
     total_tweets_processed: 7823,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -36,7 +36,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   UNI: {
     coin_name: 'Uniswap',
     coin_symbol: 'UNI',
-    sentiment_score: 6.3,
+    sentiment_score: -1.2,
     total_tweets_processed: 4156,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -44,7 +44,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   AVAX: {
     coin_name: 'Avalanche',
     coin_symbol: 'AVAX',
-    sentiment_score: 7.2,
+    sentiment_score: 0.4,
     total_tweets_processed: 6234,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -52,7 +52,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   XRP: {
     coin_name: 'XRP',
     coin_symbol: 'XRP',
-    sentiment_score: 7.4,
+    sentiment_score: 2.4,
     total_tweets_processed: 9845,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -60,7 +60,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   LTC: {
     coin_name: 'Litecoin',
     coin_symbol: 'LTC',
-    sentiment_score: 6.1,
+    sentiment_score: -2.8,
     total_tweets_processed: 3421,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -68,7 +68,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   USDT: {
     coin_name: 'Tether',
     coin_symbol: 'USDT',
-    sentiment_score: 5.8,
+    sentiment_score: 0.2,
     total_tweets_processed: 5678,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
@@ -76,7 +76,7 @@ const mockSentiment: Record<string, SentimentResponse> = {
   DOGE: {
     coin_name: 'Dogecoin',
     coin_symbol: 'DOGE',
-    sentiment_score: 8.5,
+    sentiment_score: 3.8,
     total_tweets_processed: 11234,
     time_window_start: '2024-12-13T00:00:00Z',
     time_window_end: '2024-12-14T00:00:00Z',
