@@ -13,7 +13,7 @@ interface DiscussionTopicsCardProps {
 }
 
 function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('en-US', {
+  return new Date(isoString).toLocaleDateString('tr-TR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -27,7 +27,7 @@ export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardPro
   }
 
   if (state.status === 'error') {
-    return <ErrorMessage message={state.error || 'Failed to load topics'} onRetry={onRetry} />;
+    return <ErrorMessage message={state.error || 'Konular yüklenemedi'} onRetry={onRetry} />;
   }
 
   const { topics, total_tweets_processed, time_window_start, time_window_end } = state.data!;
@@ -35,7 +35,7 @@ export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardPro
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Discussion Topics</CardTitle>
+        <CardTitle>Tartışma Konuları</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2 mb-4">

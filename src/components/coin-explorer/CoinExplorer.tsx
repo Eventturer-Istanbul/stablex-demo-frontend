@@ -18,9 +18,9 @@ export function CoinExplorer() {
       <div className="w-full max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Coin Explorer
+            StableX Coin Gezgini
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">Loading coins...</p>
+          <p className="text-gray-600 dark:text-gray-400">Coinler yükleniyor...</p>
         </div>
       </div>
     );
@@ -31,9 +31,9 @@ export function CoinExplorer() {
       <div className="w-full max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Coin Explorer
+            StableX Coin Gezgini
           </h1>
-          <p className="text-red-500">Error: {error}</p>
+          <p className="text-red-500">Hata: {error}</p>
         </div>
       </div>
     );
@@ -43,10 +43,10 @@ export function CoinExplorer() {
     <div className="w-full max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Coin Explorer
+          StableX Coin Gezgini
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Real-time sentiment, discussions, and news for {coins.length} cryptocurrencies
+          {coins.length} kripto para için gerçek zamanlı sentiment, tartışmalar ve haberler
         </p>
       </div>
       <CoinAccordion

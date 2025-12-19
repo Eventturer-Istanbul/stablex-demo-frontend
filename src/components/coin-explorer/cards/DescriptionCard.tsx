@@ -17,7 +17,7 @@ export function DescriptionCard({ state, onRetry }: DescriptionCardProps) {
   }
 
   if (state.status === 'error') {
-    return <ErrorMessage message={state.error || 'Failed to load description'} onRetry={onRetry} />;
+    return <ErrorMessage message={state.error || 'Açıklama yüklenemedi'} onRetry={onRetry} />;
   }
 
   const { description } = state.data!;
@@ -26,11 +26,11 @@ export function DescriptionCard({ state, onRetry }: DescriptionCardProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Description</CardTitle>
+          <CardTitle>Açıklama</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            No description available.
+            Açıklama mevcut değil.
           </p>
         </CardContent>
       </Card>
@@ -40,7 +40,7 @@ export function DescriptionCard({ state, onRetry }: DescriptionCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Description</CardTitle>
+        <CardTitle>Açıklama</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">

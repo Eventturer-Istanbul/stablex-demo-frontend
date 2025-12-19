@@ -30,7 +30,7 @@ export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
             onClick={onRetry}
             className="mt-3"
           >
-            Retry
+            Tekrar Dene
           </Button>
         </div>
       </div>

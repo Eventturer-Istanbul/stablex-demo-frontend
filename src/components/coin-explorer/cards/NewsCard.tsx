@@ -12,7 +12,7 @@ interface NewsCardProps {
 }
 
 function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('en-US', {
+  return new Date(isoString).toLocaleDateString('tr-TR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -26,7 +26,7 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
   }
 
   if (state.status === 'error') {
-    return <ErrorMessage message={state.error || 'Failed to load news'} onRetry={onRetry} />;
+    return <ErrorMessage message={state.error || 'Haberler yüklenemedi'} onRetry={onRetry} />;
   }
 
   const { news_summaries, total_news_processed, time_window_start, time_window_end } = state.data!;
@@ -34,7 +34,7 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>News</CardTitle>
+        <CardTitle>Haberler</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3 mb-4">

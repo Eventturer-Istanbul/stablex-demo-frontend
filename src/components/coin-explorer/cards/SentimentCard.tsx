@@ -12,7 +12,7 @@ interface SentimentCardProps {
 }
 
 function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('en-US', {
+  return new Date(isoString).toLocaleDateString('tr-TR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -26,7 +26,7 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
   }
 
   if (state.status === 'error') {
-    return <ErrorMessage message={state.error || 'Failed to load sentiment'} onRetry={onRetry} />;
+    return <ErrorMessage message={state.error || 'Sentiment analizi yüklenemedi'} onRetry={onRetry} />;
   }
 
   const { sentiment_score, time_window_start, time_window_end } = state.data!;
@@ -41,11 +41,11 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 3) return 'Very Positive';
-    if (score >= 1) return 'Positive';
-    if (score >= -1) return 'Neutral';
-    if (score >= -3) return 'Negative';
-    return 'Very Negative';
+    if (score >= 3) return 'Çok Olumlu';
+    if (score >= 1) return 'Olumlu';
+    if (score >= -1) return 'Nötr';
+    if (score >= -3) return 'Olumsuz';
+    return 'Çok Olumsuz';
   };
 
   // Calculate bar position: -5 = 0%, 0 = 50%, 5 = 100%
