@@ -29,13 +29,15 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
     return <ErrorMessage message={state.error || 'Failed to load sentiment'} onRetry={onRetry} />;
   }
 
-  const { sentiment_score, total_tweets_processed, time_window_start, time_window_end } = state.data!;
+  const { sentiment_score, time_window_start, time_window_end } = state.data!;
 
-  // Determine color based on score (-5 to 5 scale)
+  // Determine color and label based on score (-5 to 5 scale)
   const getScoreColor = (score: number) => {
-    if (score >= 2) return 'text-green-500';
-    if (score >= -2) return 'text-yellow-500';
-    return 'text-red-500';
+    if (score >= 3) return 'text-green-600';      // Very Positive
+    if (score >= 1) return 'text-green-400';      // Positive
+    if (score >= -1) return 'text-yellow-500';    // Neutral
+    if (score >= -3) return 'text-orange-500';    // Negative
+    return 'text-red-500';                        // Very Negative
   };
 
   const getScoreLabel = (score: number) => {
