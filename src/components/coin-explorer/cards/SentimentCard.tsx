@@ -59,7 +59,7 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
       <CardContent>
         <div className="flex items-baseline gap-3 mb-2">
           <span className={`text-4xl font-bold ${getScoreColor(sentiment_score)}`}>
-            {sentiment_score >= 0 ? '+' : ''}{sentiment_score.toFixed(1)}
+            {sentiment_score > 0 ? '+' : ''}{Math.abs(sentiment_score) < 0.05 ? '0.0' : sentiment_score.toFixed(1)}
           </span>
           <span className={`text-sm font-medium ${getScoreColor(sentiment_score)}`}>
             {getScoreLabel(sentiment_score)}
