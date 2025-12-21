@@ -101,10 +101,11 @@ export function useCoins() {
   useEffect(() => {
     async function fetchCoins() {
       try {
-        // Fetch only from main_summaries table
+        // Fetch only from main_summaries table, filter by Turkish language
         const { data, error: fetchError } = await supabase
           .from('main_summaries')
           .select('token_id, token_name')
+          .eq('language', 'tr')
           .order('token_name');
 
         if (fetchError) throw fetchError;
