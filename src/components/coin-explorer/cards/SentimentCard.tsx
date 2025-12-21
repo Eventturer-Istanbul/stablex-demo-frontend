@@ -93,11 +93,6 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <p className="text-xs text-gray-500 dark:text-gray-500">
-          {formatDate(time_window_start, language)} - {formatDate(time_window_end, language)}
-        </p>
-      </CardFooter>
     </Card>
   );
 }

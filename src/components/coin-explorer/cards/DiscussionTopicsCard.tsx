@@ -49,11 +49,6 @@ export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardPro
           {total_tweets_processed.toLocaleString()} tweets processed
         </p> */}
       </CardContent>
-      <CardFooter>
-        <p className="text-xs text-gray-500 dark:text-gray-500">
-          {formatDate(time_window_start, language)} - {formatDate(time_window_end, language)}
-        </p>
-      </CardFooter>
     </Card>
   );
 }

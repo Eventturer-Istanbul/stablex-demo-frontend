@@ -83,11 +83,6 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
           {total_news_processed} news articles processed
         </p> */}
       </CardContent>
-      <CardFooter>
-        <p className="text-xs text-gray-500 dark:text-gray-500">
-          {formatDate(time_window_start, language)} - {formatDate(time_window_end, language)}
-        </p>
-      </CardFooter>
       
       {/* Modal for detailed news */}
       {hasDetailedNews && (
