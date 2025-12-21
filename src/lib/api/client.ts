@@ -38,8 +38,8 @@ export async function fetchSentiment(
     coin_symbol: payload.coin_symbol,
     sentiment_score: data.sentiment_score || 5,
     total_tweets_processed: 0,
-    time_window_start: yesterday.toISOString(),
-    time_window_end: data.created_at || now.toISOString(),
+    time_window_start: data.created_at || yesterday.toISOString(),
+    time_window_end: now.toISOString(),
   };
 }
 
@@ -82,8 +82,8 @@ export async function fetchTopics(
     coin_symbol: payload.coin_symbol,
     topics,
     total_tweets_processed: topics.length,
-    time_window_start: yesterday.toISOString(),
-    time_window_end: data.created_at || now.toISOString(),
+    time_window_start: data.created_at || yesterday.toISOString(),
+    time_window_end: now.toISOString(),
   };
 }
 
@@ -126,8 +126,8 @@ export async function fetchNews(
     news_summaries: bullets,
     news_body: newsBody,
     total_news_processed: bullets.length,
-    time_window_start: yesterday.toISOString(),
-    time_window_end: data.created_at || now.toISOString(),
+    time_window_start: data.created_at || yesterday.toISOString(),
+    time_window_end: now.toISOString(),
     news_sources: [],
   };
 }
