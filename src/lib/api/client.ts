@@ -1,11 +1,14 @@
 import { CoinRequest, SentimentResponse, TopicsResponse, NewsResponse, DescriptionResponse } from '@/types/api';
 import { supabase } from '@/lib/supabase/client';
 
+export type Language = 'en' | 'tr';
+
 // All data comes from main_summaries table only
 // coin_symbol is now token_id (as string)
 
 export async function fetchSentiment(
-  payload: CoinRequest
+  payload: CoinRequest,
+  language: Language = 'tr'
 ): Promise<SentimentResponse> {
   const tokenId = parseInt(payload.coin_symbol, 10);
 
@@ -13,7 +16,7 @@ export async function fetchSentiment(
     .from('main_summaries')
     .select('token_name, sentiment_score, created_at')
     .eq('token_id', tokenId)
-    .eq('language', 'tr')
+    .eq('language', language)
     .single();
 
   const now = new Date();
@@ -40,14 +43,17 @@ export async function fetchSentiment(
   };
 }
 
-export async function fetchTopics(payload: CoinRequest): Promise<TopicsResponse> {
+export async function fetchTopics(
+  payload: CoinRequest,
+  language: Language = 'tr'
+): Promise<TopicsResponse> {
   const tokenId = parseInt(payload.coin_symbol, 10);
 
   const { data, error } = await supabase
     .from('main_summaries')
     .select('token_name, discussion_topics, created_at')
     .eq('token_id', tokenId)
-    .eq('language', 'tr')
+    .eq('language', language)
     .single();
 
   const now = new Date();
@@ -81,15 +87,18 @@ export async function fetchTopics(payload: CoinRequest): Promise<TopicsResponse>
   };
 }
 
-export async function fetchNews(payload: CoinRequest): Promise<NewsResponse> {
+export async function fetchNews(
+  payload: CoinRequest,
+  language: Language = 'tr'
+): Promise<NewsResponse> {
   const tokenId = parseInt(payload.coin_symbol, 10);
 
-  // Fetch only Turkish version
+  // Fetch with news_body included
   const { data, error } = await supabase
     .from('main_summaries')
-    .select('token_name, news_output, created_at')
+    .select('token_name, news_output, news_body, created_at')
     .eq('token_id', tokenId)
-    .eq('language', 'tr')
+    .eq('language', language)
     .single();
 
   const now = new Date();
@@ -109,11 +118,13 @@ export async function fetchNews(payload: CoinRequest): Promise<NewsResponse> {
 
   // news_output is now a direct array
   const bullets = (data.news_output as string[]) || [];
+  const newsBody = (data.news_body as string[]) || [];
 
   return {
     coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
     news_summaries: bullets,
+    news_body: newsBody,
     total_news_processed: bullets.length,
     time_window_start: yesterday.toISOString(),
     time_window_end: data.created_at || now.toISOString(),
@@ -121,14 +132,17 @@ export async function fetchNews(payload: CoinRequest): Promise<NewsResponse> {
   };
 }
 
-export async function fetchDescription(payload: CoinRequest): Promise<DescriptionResponse> {
+export async function fetchDescription(
+  payload: CoinRequest,
+  language: Language = 'tr'
+): Promise<DescriptionResponse> {
   const tokenId = parseInt(payload.coin_symbol, 10);
 
   const { data, error } = await supabase
     .from('main_summaries')
     .select('token_name, description')
     .eq('token_id', tokenId)
-    .eq('language', 'tr')
+    .eq('language', language)
     .single();
 
   if (error || !data) {

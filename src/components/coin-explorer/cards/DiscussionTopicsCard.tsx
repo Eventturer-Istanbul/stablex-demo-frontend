@@ -6,14 +6,15 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { TopicsSkeleton } from '@/components/ui/Skeleton';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { Chip } from '@/components/ui/Chip';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DiscussionTopicsCardProps {
   state: EndpointState<TopicsResponse>;
   onRetry: () => void;
 }
 
-function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('tr-TR', {
+function formatDate(isoString: string, language: 'en' | 'tr' = 'tr'): string {
+  return new Date(isoString).toLocaleDateString(language === 'en' ? 'en-US' : 'tr-TR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -22,12 +23,13 @@ function formatDate(isoString: string): string {
 }
 
 export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardProps) {
+  const { language } = useLanguage();
   if (state.status === 'idle' || state.status === 'loading') {
     return <TopicsSkeleton />;
   }
 
   if (state.status === 'error') {
-    return <ErrorMessage message={state.error || 'Konular yüklenemedi'} onRetry={onRetry} />;
+    return <ErrorMessage message={state.error || (language === 'en' ? 'Failed to load topics' : 'Konular yüklenemedi')} onRetry={onRetry} />;
   }
 
   const { topics, total_tweets_processed, time_window_start, time_window_end } = state.data!;
@@ -35,7 +37,7 @@ export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardPro
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tartışma Konuları</CardTitle>
+        <CardTitle>{language === 'en' ? 'Discussion Topics' : 'Tartışma Konuları'}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2 mb-4">
@@ -49,7 +51,7 @@ export function DiscussionTopicsCard({ state, onRetry }: DiscussionTopicsCardPro
       </CardContent>
       <CardFooter>
         <p className="text-xs text-gray-500 dark:text-gray-500">
-          {formatDate(time_window_start)} - {formatDate(time_window_end)}
+          {formatDate(time_window_start, language)} - {formatDate(time_window_end, language)}
         </p>
       </CardFooter>
     </Card>

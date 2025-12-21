@@ -5,14 +5,15 @@ import { EndpointState } from '@/types/coin';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/Card';
 import { SentimentSkeleton } from '@/components/ui/Skeleton';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SentimentCardProps {
   state: EndpointState<SentimentResponse>;
   onRetry: () => void;
 }
 
-function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('tr-TR', {
+function formatDate(isoString: string, language: 'en' | 'tr' = 'tr'): string {
+  return new Date(isoString).toLocaleDateString(language === 'en' ? 'en-US' : 'tr-TR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -21,12 +22,13 @@ function formatDate(isoString: string): string {
 }
 
 export function SentimentCard({ state, onRetry }: SentimentCardProps) {
+  const { language } = useLanguage();
   if (state.status === 'idle' || state.status === 'loading') {
     return <SentimentSkeleton />;
   }
 
   if (state.status === 'error') {
-    return <ErrorMessage message={state.error || 'Sentiment analizi yüklenemedi'} onRetry={onRetry} />;
+    return <ErrorMessage message={state.error || (language === 'en' ? 'Failed to load sentiment analysis' : 'Sentiment analizi yüklenemedi')} onRetry={onRetry} />;
   }
 
   const { sentiment_score, time_window_start, time_window_end } = state.data!;
@@ -41,11 +43,19 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 3) return 'Çok Olumlu';
-    if (score >= 1) return 'Olumlu';
-    if (score >= -1) return 'Nötr';
-    if (score >= -3) return 'Olumsuz';
-    return 'Çok Olumsuz';
+    if (language === 'en') {
+      if (score >= 3) return 'Very Positive';
+      if (score >= 1) return 'Positive';
+      if (score >= -1) return 'Neutral';
+      if (score >= -3) return 'Negative';
+      return 'Very Negative';
+    } else {
+      if (score >= 3) return 'Çok Olumlu';
+      if (score >= 1) return 'Olumlu';
+      if (score >= -1) return 'Nötr';
+      if (score >= -3) return 'Olumsuz';
+      return 'Çok Olumsuz';
+    }
   };
 
   // Calculate bar position: -5 = 0%, 0 = 50%, 5 = 100%
@@ -54,7 +64,7 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sentiment</CardTitle>
+        <CardTitle>{language === 'en' ? 'Sentiment' : 'Duygu Analizi'}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-baseline gap-3 mb-2">
@@ -85,7 +95,7 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
       </CardContent>
       <CardFooter>
         <p className="text-xs text-gray-500 dark:text-gray-500">
-          {formatDate(time_window_start)} - {formatDate(time_window_end)}
+          {formatDate(time_window_start, language)} - {formatDate(time_window_end, language)}
         </p>
       </CardFooter>
     </Card>

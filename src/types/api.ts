@@ -34,6 +34,7 @@ export interface NewsResponse {
   coin_name: string;
   coin_symbol: string;
   news_summaries: string[];
+  news_body?: string[]; // Detailed news content
   total_news_processed: number;
   time_window_start: string;
   time_window_end: string;

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { CoinConfig } from '@/types/coin';
 import { supabase } from '@/lib/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Map token names to icon file names (64 coins)
 // Icons should be placed in /public/images/coins/ as SVG files
@@ -94,6 +95,7 @@ function getIconPath(tokenName: string): string {
 }
 
 export function useCoins() {
+  const { language } = useLanguage();
   const [coins, setCoins] = useState<CoinConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,11 +103,11 @@ export function useCoins() {
   useEffect(() => {
     async function fetchCoins() {
       try {
-        // Fetch only from main_summaries table, filter by Turkish language
+        // Fetch from main_summaries table, filter by current language
         const { data, error: fetchError } = await supabase
           .from('main_summaries')
           .select('token_id, token_name')
-          .eq('language', 'tr')
+          .eq('language', language)
           .order('token_name');
 
         if (fetchError) throw fetchError;
@@ -126,7 +128,7 @@ export function useCoins() {
     }
 
     fetchCoins();
-  }, []);
+  }, [language]);
 
   return { coins, loading, error };
 }

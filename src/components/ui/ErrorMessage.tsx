@@ -1,4 +1,7 @@
+'use client';
+
 import { Button } from './Button';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ErrorMessageProps {
   message: string;
@@ -6,6 +9,7 @@ interface ErrorMessageProps {
 }
 
 export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
+  const { language } = useLanguage();
   return (
     <div className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
       <div className="flex items-start gap-3">
@@ -30,7 +34,7 @@ export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
             onClick={onRetry}
             className="mt-3"
           >
-            Tekrar Dene
+            {language === 'en' ? 'Try Again' : 'Tekrar Dene'}
           </Button>
         </div>
       </div>

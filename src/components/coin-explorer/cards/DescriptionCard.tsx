@@ -5,6 +5,7 @@ import { EndpointState } from '@/types/coin';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { DescriptionSkeleton } from '@/components/ui/Skeleton';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DescriptionCardProps {
   state: EndpointState<DescriptionResponse>;
@@ -12,12 +13,13 @@ interface DescriptionCardProps {
 }
 
 export function DescriptionCard({ state, onRetry }: DescriptionCardProps) {
+  const { language } = useLanguage();
   if (state.status === 'idle' || state.status === 'loading') {
     return <DescriptionSkeleton />;
   }
 
   if (state.status === 'error') {
-    return <ErrorMessage message={state.error || 'Açıklama yüklenemedi'} onRetry={onRetry} />;
+    return <ErrorMessage message={state.error || (language === 'en' ? 'Failed to load description' : 'Açıklama yüklenemedi')} onRetry={onRetry} />;
   }
 
   const { description } = state.data!;
@@ -26,11 +28,11 @@ export function DescriptionCard({ state, onRetry }: DescriptionCardProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Açıklama</CardTitle>
+          <CardTitle>{language === 'en' ? 'Description' : 'Açıklama'}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            Açıklama mevcut değil.
+            {language === 'en' ? 'No description available.' : 'Açıklama mevcut değil.'}
           </p>
         </CardContent>
       </Card>
@@ -40,7 +42,7 @@ export function DescriptionCard({ state, onRetry }: DescriptionCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Açıklama</CardTitle>
+        <CardTitle>{language === 'en' ? 'Description' : 'Açıklama'}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
