@@ -14,7 +14,7 @@ export async function fetchSentiment(
 
   const { data, error } = await supabase
     .from('main_summaries')
-    .select('token_name, sentiment_score, created_at')
+    .select('token_name, sentiment_score, tweet_count, created_at')
     .eq('token_id', tokenId)
     .eq('language', language)
     .single();
@@ -38,6 +38,7 @@ export async function fetchSentiment(
     coin_symbol: payload.coin_symbol,
     sentiment_score: data.sentiment_score || 5,
     total_tweets_processed: 0,
+    tweet_count: data.tweet_count || 0,
     time_window_start: data.created_at || yesterday.toISOString(),
     time_window_end: now.toISOString(),
   };
@@ -51,7 +52,7 @@ export async function fetchTopics(
 
   const { data, error } = await supabase
     .from('main_summaries')
-    .select('token_name, discussion_topics, created_at')
+    .select('token_name, discussion_topics, top_tweets, created_at')
     .eq('token_id', tokenId)
     .eq('language', language)
     .single();
@@ -77,10 +78,14 @@ export async function fetchTopics(
     tweet_count: 0,
   }));
 
+  // Handle top_tweets which can be either strings or objects
+  const topTweets = (data.top_tweets as any[]) || [];
+
   return {
     coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
     topics,
+    top_tweets: topTweets,
     total_tweets_processed: topics.length,
     time_window_start: data.created_at || yesterday.toISOString(),
     time_window_end: now.toISOString(),
@@ -93,10 +98,10 @@ export async function fetchNews(
 ): Promise<NewsResponse> {
   const tokenId = parseInt(payload.coin_symbol, 10);
 
-  // Fetch with news_body included
+  // Fetch with news_body and citation_urls included
   const { data, error } = await supabase
     .from('main_summaries')
-    .select('token_name, news_output, news_body, created_at')
+    .select('token_name, news_output, news_body, citation_urls, created_at')
     .eq('token_id', tokenId)
     .eq('language', language)
     .single();
@@ -119,12 +124,14 @@ export async function fetchNews(
   // news_output is now a direct array
   const bullets = (data.news_output as string[]) || [];
   const newsBody = (data.news_body as string[]) || [];
+  const citationUrls = (data.citation_urls as string[]) || [];
 
   return {
     coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
     news_summaries: bullets,
     news_body: newsBody,
+    citation_urls: citationUrls,
     total_news_processed: bullets.length,
     time_window_start: data.created_at || yesterday.toISOString(),
     time_window_end: now.toISOString(),

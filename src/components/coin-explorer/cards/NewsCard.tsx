@@ -24,6 +24,19 @@ function formatDate(isoString: string, language: 'en' | 'tr' = 'tr'): string {
   });
 }
 
+function getShortUrl(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    // Get domain + first 2-3 path segments
+    const pathParts = urlObj.pathname.split('/').filter(p => p);
+    const shortPath = pathParts.slice(0, 2).join('/');
+    return `${urlObj.origin}${shortPath ? '/' + shortPath : ''}`;
+  } catch {
+    // If URL parsing fails, return first 50 characters
+    return url.length > 50 ? url.substring(0, 50) + '...' : url;
+  }
+}
+
 export function NewsCard({ state, onRetry }: NewsCardProps) {
   const { language } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,7 +48,7 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
     return <ErrorMessage message={state.error || (language === 'en' ? 'Failed to load news' : 'Haberler yüklenemedi')} onRetry={onRetry} />;
   }
 
-  const { news_summaries, news_body, total_news_processed, time_window_start, time_window_end } = state.data!;
+  const { news_summaries, news_body, citation_urls, total_news_processed, time_window_start, time_window_end } = state.data!;
   const hasDetailedNews = news_body && news_body.length > 0;
 
   return (
@@ -92,6 +105,7 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
           title={language === 'en' ? 'Detailed News' : 'Detaylı Haberler'}
         >
           <div className="space-y-4">
+            {/* News items */}
             {news_body!.map((newsItem, index) => (
               <div
                 key={index}
@@ -102,6 +116,58 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
                 </p>
               </div>
             ))}
+            
+            {/* Grouped Citations Section */}
+            {citation_urls && citation_urls.filter(url => url).length > 0 && (
+              <div className="mt-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg 
+                    className="w-4 h-4 text-blue-600 dark:text-blue-400" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" 
+                    />
+                  </svg>
+                  <span className="text-sm font-semibold text-blue-900 dark:text-blue-300">
+                    {language === 'en' ? 'Sources' : 'Kaynaklar'}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {citation_urls.map((url, index) => 
+                    url ? (
+                      <a
+                        key={index}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300 bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <svg 
+                          className="w-3 h-3" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={2} 
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
+                          />
+                        </svg>
+                        {getShortUrl(url)}
+                      </a>
+                    ) : null
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </Modal>
       )}

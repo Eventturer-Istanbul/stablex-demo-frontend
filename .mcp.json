@@ -1,16 +1,5 @@
 {
     "mcpServers": {
-      "n8n-mcp": {
-        "command": "npx",
-        "args": ["n8n-mcp"],
-        "env": {
-          "MCP_MODE": "stdio",
-          "LOG_LEVEL": "error",
-          "DISABLE_CONSOLE_OUTPUT": "true",
-          "N8N_API_URL": "https://kuzeyunlu.app.n8n.cloud",
-          "N8N_API_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDMwYTY2OC0yNWU4LTQxMTMtOTZiYy1jOTA4Yzg3OTIxN2MiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzU4ODIzNjYwLCJleHAiOjE3NjY1MjM2MDB9.NZ-6OxEctPlR3vOs-mE4gCXiacXBUvkTOAbhItXRM3k"
-        }
-      },
       "sequential-thinking": {
         "command": "npx",
         "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
@@ -23,7 +12,7 @@
           "--project-ref=ncyebjvassqksizxkeja"
         ],
         "env": {
-          "SUPABASE_ACCESS_TOKEN": "sbp_25e01f32a93ab42df5b734621b7cf22eeef2ca77"
+          "SUPABASE_ACCESS_TOKEN": "sbp_8fe1c3b63dcc40dbdd535bba24cc1f08570fa75d"
         }
       }
     }

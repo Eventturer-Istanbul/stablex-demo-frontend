@@ -31,7 +31,7 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
     return <ErrorMessage message={state.error || (language === 'en' ? 'Failed to load sentiment analysis' : 'Sentiment analizi yüklenemedi')} onRetry={onRetry} />;
   }
 
-  const { sentiment_score, time_window_start, time_window_end } = state.data!;
+  const { sentiment_score, tweet_count, time_window_start, time_window_end } = state.data!;
 
   // Determine color and label based on score (-5 to 5 scale)
   const getScoreColor = (score: number) => {
@@ -92,6 +92,15 @@ export function SentimentCard({ state, onRetry }: SentimentCardProps) {
             <span>+5</span>
           </div>
         </div>
+
+        {/* Tweet count information */}
+        {tweet_count !== undefined && tweet_count > 0 && (
+          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+            {language === 'en' 
+              ? `${tweet_count} validated tweets are used from the last 6 hours about this token to extract sentiment score.`
+              : `Bu token hakkında son 6 saatte ${tweet_count} doğrulanmış tweet duygu analizinde kullanıldı.`}
+          </p>
+        )}
       </CardContent>
     </Card>
   );
