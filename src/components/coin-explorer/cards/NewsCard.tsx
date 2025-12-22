@@ -118,29 +118,40 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
             ))}
             
             {/* Grouped Citations Section */}
-            {citation_urls && citation_urls.filter(url => url).length > 0 && (
-              <div className="mt-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                <div className="flex items-center gap-2 mb-3">
-                  <svg 
-                    className="w-4 h-4 text-blue-600 dark:text-blue-400" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" 
-                    />
-                  </svg>
-                  <span className="text-sm font-semibold text-blue-900 dark:text-blue-300">
-                    {language === 'en' ? 'Sources' : 'Kaynaklar'}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {citation_urls.map((url, index) => 
-                    url ? (
+            {citation_urls && citation_urls.length > 0 && (() => {
+              // Parse citation URLs - handle both comma-separated strings and arrays
+              const parsedUrls = citation_urls.flatMap(url => {
+                if (typeof url === 'string' && url.includes(',')) {
+                  // Split comma-separated URLs
+                  return url.split(',').map(u => u.trim()).filter(u => u);
+                }
+                return url ? [url.trim()] : [];
+              }).filter(url => url);
+
+              if (parsedUrls.length === 0) return null;
+
+              return (
+                <div className="mt-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg 
+                      className="w-4 h-4 text-blue-600 dark:text-blue-400" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" 
+                      />
+                    </svg>
+                    <span className="text-sm font-semibold text-blue-900 dark:text-blue-300">
+                      {language === 'en' ? 'Sources' : 'Kaynaklar'}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {parsedUrls.map((url, index) => (
                       <a
                         key={index}
                         href={url}
@@ -163,11 +174,11 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
                         </svg>
                         {getShortUrl(url)}
                       </a>
-                    ) : null
-                  )}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
           </div>
         </Modal>
       )}
