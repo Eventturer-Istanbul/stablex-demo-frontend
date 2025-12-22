@@ -27,13 +27,14 @@ function formatDate(isoString: string, language: 'en' | 'tr' = 'tr'): string {
 function getShortUrl(url: string): string {
   try {
     const urlObj = new URL(url);
-    // Get domain + first 2-3 path segments
+    // Get domain + first path segment only
     const pathParts = urlObj.pathname.split('/').filter(p => p);
-    const shortPath = pathParts.slice(0, 2).join('/');
-    return `${urlObj.origin}${shortPath ? '/' + shortPath : ''}`;
+    const firstPath = pathParts[0] || '';
+    // Always add trailing slash if there's a path
+    return `${urlObj.origin}${firstPath ? '/' + firstPath + '/' : '/'}`;
   } catch {
-    // If URL parsing fails, return first 50 characters
-    return url.length > 50 ? url.substring(0, 50) + '...' : url;
+    // If URL parsing fails, return first 40 characters
+    return url.length > 40 ? url.substring(0, 40) + '...' : url;
   }
 }
 
@@ -118,18 +119,28 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
             ))}
             
             {/* Grouped Citations Section */}
-            {citation_urls && citation_urls.length > 0 && (() => {
-              // Parse citation URLs - handle both comma-separated strings and arrays
-              const parsedUrls = citation_urls.flatMap(url => {
-                // Ensure url is a string before processing
-                if (!url || typeof url !== 'string') return [];
-                
-                if (url.includes(',')) {
-                  // Split comma-separated URLs
-                  return url.split(',').map(u => u.trim()).filter(u => u);
-                }
-                return [url.trim()];
-              }).filter(url => url && url.length > 0);
+            {citation_urls && (() => {
+              // Parse citation URLs - handle various formats
+              let parsedUrls: string[] = [];
+              
+              // citation_urls is always an array from our API
+              if (Array.isArray(citation_urls) && citation_urls.length > 0) {
+                parsedUrls = citation_urls.flatMap((url: any) => {
+                  // Skip null/undefined values
+                  if (!url) return [];
+                  
+                  // Convert to string
+                  const urlStr = String(url);
+                  
+                  // Check if this string contains multiple comma-separated URLs
+                  if (urlStr.includes(',')) {
+                    return urlStr.split(',').map((u: string) => u.trim()).filter((u: string) => u);
+                  }
+                  
+                  // Single URL
+                  return urlStr.trim() ? [urlStr.trim()] : [];
+                }).filter((url: string) => url && url.length > 0).slice(0, 4); // Limit to 4 URLs
+              }
 
               if (parsedUrls.length === 0) return null;
 
