@@ -121,12 +121,15 @@ export function NewsCard({ state, onRetry }: NewsCardProps) {
             {citation_urls && citation_urls.length > 0 && (() => {
               // Parse citation URLs - handle both comma-separated strings and arrays
               const parsedUrls = citation_urls.flatMap(url => {
-                if (typeof url === 'string' && url.includes(',')) {
+                // Ensure url is a string before processing
+                if (!url || typeof url !== 'string') return [];
+                
+                if (url.includes(',')) {
                   // Split comma-separated URLs
                   return url.split(',').map(u => u.trim()).filter(u => u);
                 }
-                return url ? [url.trim()] : [];
-              }).filter(url => url);
+                return [url.trim()];
+              }).filter(url => url && url.length > 0);
 
               if (parsedUrls.length === 0) return null;
 
