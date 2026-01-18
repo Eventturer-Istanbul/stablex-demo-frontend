@@ -482,7 +482,7 @@ export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOp
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 6v6l4 2"/>
                   </svg>
-                  {source.source} • {formatTimeAgo(source.published_at)}
+                  {formatTimeAgo(source.published_at)}
                 </span>
                 {source.url && (
                   <a href={source.url} target="_blank" rel="noopener noreferrer" className="text-yellow-500 hover:underline">
