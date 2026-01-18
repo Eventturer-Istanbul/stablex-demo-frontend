@@ -177,7 +177,7 @@ export async function fetchInsights(
   const [summariesResult, technicalResult] = await Promise.all([
     supabase
       .from('main_summaries')
-      .select('token_name, description, insights, discussion_topics, sentiment_score, tweet_count, top_tweets')
+      .select('token_name, description, insights, discussion_topics, sentiment_score, tweet_count, top_tweets, news_body, citation_urls')
       .eq('token_id', tokenId)
       .eq('language', language)
       .single(),
@@ -214,6 +214,17 @@ export async function fetchInsights(
     };
   }
 
+  // Enrich sources with full news_body and citation_urls from main_summaries
+  const newsBody = (data.news_body as string[]) || [];
+  const citationUrls = (data.citation_urls as string[]) || [];
+  const enrichedSources = (insights.sources || []).map((source: any, index: number) => ({
+    ...source,
+    // Use full body from news_body array if available, fallback to existing summary
+    summary: newsBody[index] || source.summary || '',
+    // Use citation URL if available
+    url: citationUrls[index] || source.url || null,
+  }));
+
   return {
     token: insights.token || { id: String(tokenId), symbol: '', name: data.token_name },
     updated_at: insights.updated_at || null,
@@ -224,7 +235,7 @@ export async function fetchInsights(
     },
     positives: insights.positives || [],
     negatives: insights.negatives || [],
-    sources: insights.sources || [],
+    sources: enrichedSources,
     discussion: {
       overall: sentimentScore > 0 ? 'positive' : sentimentScore < 0 ? 'negative' : 'neutral',
       score: sentimentScore,
