@@ -68,3 +68,98 @@ export interface DescriptionResponse {
   coin_symbol: string;
   description: string | null;
 }
+
+// Insights Types
+export interface InsightItem {
+  category: string;
+  description: string;
+  source_type: 'news' | 'technical_analysis';
+  news_id?: number;
+  analysis_index?: number;
+}
+
+export interface InsightSource {
+  id: string;
+  title: string;
+  summary: string;
+  sentiment: 'positive' | 'negative' | 'neutral';
+  source: string;
+  published_at: string;
+  url: string | null;
+}
+
+export interface TopTweet {
+  text: string;
+  urls?: string[];
+  likes: number;
+  views: number;
+  retweets: number;
+  tweet_id: string;
+  created_at: string;
+  author_name: string;
+  author_username: string;
+  author_verified?: boolean;
+  author_followers?: number;
+}
+
+export interface TechnicalIndicators {
+  rsi: number;
+  macd: {
+    signal: string;
+    histogram: number;
+  };
+  ema: {
+    short_7: number;
+    medium_25: number;
+    long_99: number;
+  };
+  bb: {
+    lower: number;
+    upper: number;
+    width_percent: number;
+  };
+  atr: number;
+  volume: {
+    ratio: number;
+    current: number;
+    avg_7d: number;
+  };
+}
+
+export interface TechnicalAnalysisResponse {
+  token_name: string;
+  current_price: number;
+  positive_paragraphs: string[];
+  risk_paragraphs: string[];
+  indicators: TechnicalIndicators | null;
+  created_at: string;
+}
+
+export interface InsightsResponse {
+  token: {
+    id: string;
+    symbol: string;
+    name: string;
+  };
+  updated_at: string | null;
+  tldr: {
+    summary: string;
+    key_points: string[];
+  } | null;
+  what_is: {
+    question: string;
+    answer: string | null;
+  };
+  positives: InsightItem[];
+  negatives: InsightItem[];
+  sources: InsightSource[];
+  discussion: {
+    overall: 'positive' | 'negative' | 'neutral';
+    score: number;
+    tweet_count: number;
+    topics: string[];
+    top_tweets: TopTweet[];
+  };
+  technical_analysis: TechnicalAnalysisResponse | null;
+  disclaimer: string;
+}

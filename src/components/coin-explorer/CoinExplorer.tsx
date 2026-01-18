@@ -1,19 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { CoinSymbol } from '@/types/coin';
+import { CoinConfig } from '@/types/coin';
 import { useCoins } from '@/hooks/useCoins';
-import { CoinAccordion } from './CoinAccordion';
+import { CoinList } from './CoinList';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { InsightsPanel } from '@/components/insights';
 
 export function CoinExplorer() {
-  const [expandedCoin, setExpandedCoin] = useState<CoinSymbol | null>(null);
+  const [selectedCoin, setSelectedCoin] = useState<CoinConfig | null>(null);
   const { coins, loading, error } = useCoins();
   const { language } = useLanguage();
 
-  const handleToggle = (symbol: CoinSymbol) => {
-    setExpandedCoin((prev) => (prev === symbol ? null : symbol));
+  const handleCoinClick = (coin: CoinConfig) => {
+    setSelectedCoin(coin);
+  };
+
+  const handleClosePanel = () => {
+    setSelectedCoin(null);
   };
 
   if (loading) {
@@ -65,20 +70,26 @@ export function CoinExplorer() {
               {language === 'en' ? 'StableX Coin Explorer' : 'StableX Coin Gezgini'}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              {language === 'en' 
-                ? `Real-time sentiment, discussions and news for ${coins.length} cryptocurrencies`
-                : `${coins.length} kripto para için gerçek zamanlı sentiment, tartışmalar ve haberler`
+              {language === 'en'
+                ? `AI-powered insights for ${coins.length} cryptocurrencies`
+                : `${coins.length} kripto para için yapay zeka destekli analizler`
               }
             </p>
           </div>
           <LanguageSwitcher />
         </div>
       </div>
-      <CoinAccordion
-        coins={coins}
-        expandedCoin={expandedCoin}
-        onToggle={handleToggle}
-      />
+      <CoinList coins={coins} onCoinClick={handleCoinClick} />
+
+      {selectedCoin && (
+        <InsightsPanel
+          tokenId={selectedCoin.symbol}
+          tokenName={selectedCoin.name}
+          tokenColor={selectedCoin.color}
+          isOpen={!!selectedCoin}
+          onClose={handleClosePanel}
+        />
+      )}
     </div>
   );
 }

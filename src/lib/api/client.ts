@@ -1,4 +1,4 @@
-import { CoinRequest, SentimentResponse, TopicsResponse, NewsResponse, DescriptionResponse } from '@/types/api';
+import { CoinRequest, SentimentResponse, TopicsResponse, NewsResponse, DescriptionResponse, InsightsResponse, TechnicalAnalysisResponse } from '@/types/api';
 import { supabase } from '@/lib/supabase/client';
 
 export type Language = 'en' | 'tr';
@@ -164,5 +164,75 @@ export async function fetchDescription(
     coin_name: data.token_name,
     coin_symbol: payload.coin_symbol,
     description: data.description || null,
+  };
+}
+
+export async function fetchInsights(
+  payload: CoinRequest,
+  language: Language = 'en'
+): Promise<InsightsResponse | null> {
+  const tokenId = parseInt(payload.coin_symbol, 10);
+
+  // Fetch main summaries and technical analysis in parallel
+  const [summariesResult, technicalResult] = await Promise.all([
+    supabase
+      .from('main_summaries')
+      .select('token_name, description, insights, discussion_topics, sentiment_score, tweet_count, top_tweets')
+      .eq('token_id', tokenId)
+      .eq('language', language)
+      .single(),
+    supabase
+      .from('token_technical_analysis')
+      .select('token_name, positive_paragraphs, risk_paragraphs, indicators_snapshot, created_at')
+      .eq('token_id', tokenId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+  ]);
+
+  const { data, error } = summariesResult;
+
+  if (error || !data || !data.insights) {
+    return null;
+  }
+
+  const insights = data.insights as any;
+  const sentimentScore = parseFloat(data.sentiment_score) || 0;
+
+  // Process technical analysis if available
+  let technicalAnalysis: TechnicalAnalysisResponse | null = null;
+  if (technicalResult.data && !technicalResult.error) {
+    const ta = technicalResult.data;
+    const indicators = ta.indicators_snapshot as any;
+    technicalAnalysis = {
+      token_name: ta.token_name,
+      current_price: indicators?.current_price || 0,
+      positive_paragraphs: (ta.positive_paragraphs as string[]) || [],
+      risk_paragraphs: (ta.risk_paragraphs as string[]) || [],
+      indicators: indicators?.indicators || null,
+      created_at: ta.created_at,
+    };
+  }
+
+  return {
+    token: insights.token || { id: String(tokenId), symbol: '', name: data.token_name },
+    updated_at: insights.updated_at || null,
+    tldr: insights.tldr || null,
+    what_is: {
+      question: `What is ${insights.token?.symbol || ''}?`,
+      answer: data.description || null,
+    },
+    positives: insights.positives || [],
+    negatives: insights.negatives || [],
+    sources: insights.sources || [],
+    discussion: {
+      overall: sentimentScore > 0 ? 'positive' : sentimentScore < 0 ? 'negative' : 'neutral',
+      score: sentimentScore,
+      tweet_count: data.tweet_count || 0,
+      topics: (data.discussion_topics as string[]) || [],
+      top_tweets: (data.top_tweets as any[]) || [],
+    },
+    technical_analysis: technicalAnalysis,
+    disclaimer: insights.disclaimer || 'The information in this report could be inaccurate. Please DYOR. Not financial advice.',
   };
 }

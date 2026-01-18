@@ -32,7 +32,7 @@ export function CoinAccordionItem({
               'bg-gray-50 dark:bg-gray-800/50'
             )}
           >
-            {isExpanded && <CoinDetails coinSymbol={coin.symbol} />}
+            {isExpanded && <CoinDetails coinSymbol={coin.symbol} coinName={coin.name} coinColor={coin.color} />}
           </div>
         </div>
       </div>
