@@ -32,12 +32,26 @@ export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOp
   const { insights, loading, error, fetch } = useInsights();
   const [viewMode, setViewMode] = useState<ViewMode>('main');
   const [whatIsExpanded, setWhatIsExpanded] = useState(false);
+  const [expandedSources, setExpandedSources] = useState<Set<string>>(new Set());
+
+  const toggleSourceExpanded = (sourceId: string) => {
+    setExpandedSources(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sourceId)) {
+        newSet.delete(sourceId);
+      } else {
+        newSet.add(sourceId);
+      }
+      return newSet;
+    });
+  };
 
   useEffect(() => {
     if (isOpen && tokenId) {
       fetch(tokenId, 'en');
       setViewMode('main');
       setWhatIsExpanded(false);
+      setExpandedSources(new Set());
     }
   }, [isOpen, tokenId, fetch]);
 
@@ -437,33 +451,49 @@ export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOp
           <div className="text-lg font-semibold text-[#eaecef] mb-1">News Sources</div>
           <div className="text-sm text-gray-500">{insights.sources.length} articles used to generate insights</div>
         </div>
-        {insights.sources.map((source) => (
-          <div key={source.id} className="bg-[#2b3139] rounded-lg p-4 mb-3">
-            <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded mb-2 uppercase ${
-              source.sentiment === 'positive' ? 'bg-green-500/15 text-green-500' :
-              source.sentiment === 'negative' ? 'bg-red-500/15 text-red-500' :
-              'bg-gray-500/15 text-gray-500'
-            }`}>
-              {source.sentiment}
-            </span>
-            <div className="text-sm font-semibold text-[#eaecef] mb-2 leading-snug">{source.title}</div>
-            <div className="text-[13px] text-[#b7bdc6] leading-relaxed mb-3">{source.summary}</div>
-            <div className="flex items-center justify-between text-xs text-[#5e6673]">
-              <span className="flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M12 6v6l4 2"/>
-                </svg>
-                {source.source} • {formatTimeAgo(source.published_at)}
+        {insights.sources.map((source) => {
+          const isExpanded = expandedSources.has(source.id);
+          const shouldTruncate = source.summary.length > 200;
+          const displayText = shouldTruncate && !isExpanded
+            ? source.summary.slice(0, 200) + '...'
+            : source.summary;
+
+          return (
+            <div key={source.id} className="bg-[#2b3139] rounded-lg p-4 mb-3">
+              <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded mb-2 uppercase ${
+                source.sentiment === 'positive' ? 'bg-green-500/15 text-green-500' :
+                source.sentiment === 'negative' ? 'bg-red-500/15 text-red-500' :
+                'bg-gray-500/15 text-gray-500'
+              }`}>
+                {source.sentiment}
               </span>
-              {source.url && (
-                <a href={source.url} target="_blank" rel="noopener noreferrer" className="text-yellow-500 hover:underline">
-                  Read more
-                </a>
+              <div className="text-sm font-semibold text-[#eaecef] mb-2 leading-snug">{source.title}</div>
+              <div className="text-[13px] text-[#b7bdc6] leading-relaxed mb-2">{displayText}</div>
+              {shouldTruncate && (
+                <button
+                  onClick={() => toggleSourceExpanded(source.id)}
+                  className="text-xs text-yellow-500 hover:underline mb-3"
+                >
+                  {isExpanded ? 'Show less' : 'Show more'}
+                </button>
               )}
+              <div className="flex items-center justify-between text-xs text-[#5e6673]">
+                <span className="flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                  </svg>
+                  {source.source} • {formatTimeAgo(source.published_at)}
+                </span>
+                {source.url && (
+                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="text-yellow-500 hover:underline">
+                    Read more
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </>
     );
   };
