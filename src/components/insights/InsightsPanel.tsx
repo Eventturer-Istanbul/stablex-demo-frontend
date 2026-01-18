@@ -448,8 +448,7 @@ export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOp
           Back to Insights
         </button>
         <div className="mb-5">
-          <div className="text-lg font-semibold text-[#eaecef] mb-1">News Sources</div>
-          <div className="text-sm text-gray-500">{insights.sources.length} articles used to generate insights</div>
+          <div className="text-lg font-semibold text-[#eaecef]">News Sources</div>
         </div>
         {insights.sources.map((source) => {
           const isExpanded = expandedSources.has(source.id);
