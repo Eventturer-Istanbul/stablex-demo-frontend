@@ -371,7 +371,7 @@ export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOp
               </div>
             )}
 
-            {/* Risk Signals */}
+            {/* Bearish Signals */}
             {insights.technical_analysis.risk_paragraphs.length > 0 && (
               <div className="bg-[#2b3139] rounded-xl p-5 mb-4">
                 <div className="flex items-center gap-2 text-sm font-semibold text-red-400 mb-3">
@@ -379,7 +379,7 @@ export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOp
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 8v4M12 16h.01"/>
                   </svg>
-                  Risk Signals
+                  Bearish Signals
                 </div>
                 <ul className="space-y-2">
                   {insights.technical_analysis.risk_paragraphs.map((para, i) => (
