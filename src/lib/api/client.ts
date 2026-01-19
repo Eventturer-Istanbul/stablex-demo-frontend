@@ -183,7 +183,7 @@ export async function fetchInsights(
       .single(),
     supabase
       .from('token_technical_analysis')
-      .select('token_name, positive_paragraphs, risk_paragraphs, indicators_snapshot, created_at')
+      .select('token_name, positive_paragraphs, risk_paragraphs, indicators_snapshot, created_at, updated_at')
       .eq('token_id', tokenId)
       .order('created_at', { ascending: false })
       .limit(1)
@@ -227,7 +227,7 @@ export async function fetchInsights(
 
   return {
     token: insights.token || { id: String(tokenId), symbol: '', name: data.token_name },
-    updated_at: insights.updated_at || null,
+    updated_at: technicalResult.data?.updated_at || insights.updated_at || null,
     tldr: insights.tldr || null,
     what_is: {
       question: `What is ${insights.token?.symbol || ''}?`,
