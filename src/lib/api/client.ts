@@ -185,6 +185,7 @@ export async function fetchInsights(
       .from('token_technical_analysis')
       .select('token_name, positive_paragraphs, risk_paragraphs, indicators_snapshot, created_at, updated_at')
       .eq('token_id', tokenId)
+      .eq('language', language)
       .order('created_at', { ascending: false })
       .limit(1)
       .single()

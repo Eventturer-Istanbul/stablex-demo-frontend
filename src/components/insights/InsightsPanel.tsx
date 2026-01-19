@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { InsightsResponse } from '@/types/api';
 import { useInsights } from '@/hooks/useInsights';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface InsightsPanelProps {
   tokenId: string;
@@ -30,6 +31,7 @@ function formatTimeAgo(dateStr: string | null): string {
 
 export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOpen, onClose }: InsightsPanelProps) {
   const { insights, loading, error, fetch } = useInsights();
+  const { language } = useLanguage();
   const [viewMode, setViewMode] = useState<ViewMode>('main');
   const [whatIsExpanded, setWhatIsExpanded] = useState(false);
   const [expandedSources, setExpandedSources] = useState<Set<string>>(new Set());
@@ -48,12 +50,12 @@ export function InsightsPanel({ tokenId, tokenName, tokenColor = '#627EEA', isOp
 
   useEffect(() => {
     if (isOpen && tokenId) {
-      fetch(tokenId, 'en');
+      fetch(tokenId, language);
       setViewMode('main');
       setWhatIsExpanded(false);
       setExpandedSources(new Set());
     }
-  }, [isOpen, tokenId, fetch]);
+  }, [isOpen, tokenId, fetch, language]);
 
   // Close on escape key
   useEffect(() => {
