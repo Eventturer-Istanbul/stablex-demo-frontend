@@ -126,7 +126,8 @@ function formatTimeAgo(
 }
 
 // Strip markdown links from text - removes [text](url) patterns entirely
-function stripMarkdownLinks(text: string): string {
+function stripMarkdownLinks(text: string | null | undefined): string {
+  if (!text || typeof text !== "string") return "";
   return text
     .replace(/\(\[([^\]]+)\]\([^)]+\)\)/g, "") // ([text](url)) -> empty
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "") // [text](url) -> empty
@@ -136,7 +137,7 @@ function stripMarkdownLinks(text: string): string {
 
 // Check if URL is valid and external
 function isValidExternalUrl(url: string | null | undefined): boolean {
-  if (!url) return false;
+  if (!url || typeof url !== "string") return false;
   const trimmed = url.trim();
   return trimmed.startsWith("http://") || trimmed.startsWith("https://");
 }
