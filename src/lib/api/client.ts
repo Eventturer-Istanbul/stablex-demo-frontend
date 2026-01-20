@@ -217,14 +217,22 @@ export async function fetchInsights(
 
   // Enrich sources with full news_body and citation_urls from main_summaries
   const newsBody = (data.news_body as string[]) || [];
-  const citationUrls = (data.citation_urls as string[]) || [];
-  const enrichedSources = (insights.sources || []).map((source: any, index: number) => ({
-    ...source,
-    // Use full body from news_body array if available, fallback to existing summary
-    summary: newsBody[index] || source.summary || '',
-    // Use citation URL if available
-    url: citationUrls[index] || source.url || null,
-  }));
+  const citationUrls = (data.citation_urls as any[]) || [];
+  const enrichedSources = (insights.sources || []).map((source: any, index: number) => {
+    // citation_urls is an array of arrays - get first URL from nested array if available
+    const citationArray = citationUrls[index];
+    const citationUrl = Array.isArray(citationArray) && citationArray.length > 0
+      ? citationArray[0]
+      : null;
+
+    return {
+      ...source,
+      // Use full body from news_body array if available, fallback to existing summary
+      summary: newsBody[index] || source.summary || '',
+      // Use citation URL if available, properly falls back to source.url
+      url: citationUrl || source.url || null,
+    };
+  });
 
   return {
     token: insights.token || { id: String(tokenId), symbol: '', name: data.token_name },
