@@ -125,6 +125,22 @@ function formatTimeAgo(
   return t.updatedDaysAgo(Math.floor(diffHours / 24));
 }
 
+// Strip markdown links from text - removes [text](url) patterns entirely
+function stripMarkdownLinks(text: string): string {
+  return text
+    .replace(/\(\[([^\]]+)\]\([^)]+\)\)/g, "") // ([text](url)) -> empty
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "") // [text](url) -> empty
+    .replace(/\s{2,}/g, " ") // Clean up extra spaces
+    .trim();
+}
+
+// Check if URL is valid and external
+function isValidExternalUrl(url: string | null | undefined): boolean {
+  if (!url) return false;
+  const trimmed = url.trim();
+  return trimmed.startsWith("http://") || trimmed.startsWith("https://");
+}
+
 export function InsightsPanel({
   tokenId,
   tokenName,
@@ -755,16 +771,18 @@ export function InsightsPanel({
             {t.newsSources}
           </div>
         </div>
-        {insights.sources.map((source) => {
-          const isExpanded = expandedSources.has(source.id);
-          const shouldTruncate = source.summary.length > 200;
+        {insights.sources.map((source, index) => {
+          const sourceKey = String(index);
+          const isExpanded = expandedSources.has(sourceKey);
+          const cleanSummary = stripMarkdownLinks(source.summary);
+          const shouldTruncate = cleanSummary.length > 200;
           const displayText =
             shouldTruncate && !isExpanded
-              ? source.summary.slice(0, 200) + "..."
-              : source.summary;
+              ? cleanSummary.slice(0, 200) + "..."
+              : cleanSummary;
 
           return (
-            <div key={source.id} className="bg-[#2b3139] rounded-lg p-4 mb-3">
+            <div key={sourceKey} className="bg-[#2b3139] rounded-lg p-4 mb-3">
               <span
                 className={`inline-block text-xs font-semibold px-2 py-0.5 rounded mb-2 uppercase ${
                   source.sentiment === "positive"
@@ -788,37 +806,24 @@ export function InsightsPanel({
               </div>
               {shouldTruncate && (
                 <button
-                  onClick={() => toggleSourceExpanded(source.id)}
+                  onClick={() => toggleSourceExpanded(sourceKey)}
                   className="text-xs text-yellow-500 hover:underline mb-3"
                 >
                   {isExpanded ? t.showLess : t.showMore}
                 </button>
               )}
-              <div className="flex items-center justify-between text-xs text-[#5e6673]">
-                <span className="flex items-center gap-1.5">
-                  <svg
-                    className="w-3.5 h-3.5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 6v6l4 2" />
-                  </svg>
-                  {formatTimeAgo(source.published_at, t)}
-                </span>
-                {source.url && (
+              {isValidExternalUrl(source.url) && (
+                <div className="flex items-center justify-end text-xs text-[#5e6673]">
                   <a
-                    href={source.url}
+                    href={source.url!}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-yellow-500 hover:underline"
                   >
                     {t.readMore}
                   </a>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           );
         })}
