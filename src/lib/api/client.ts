@@ -173,25 +173,13 @@ export async function fetchInsights(
 ): Promise<InsightsResponse | null> {
   const tokenId = parseInt(payload.coin_symbol, 10);
 
-  // Fetch main summaries and technical analysis in parallel
-  const [summariesResult, technicalResult] = await Promise.all([
-    supabase
-      .from('main_summaries')
-      .select('token_name, description, insights, discussion_topics, sentiment_score, tweet_count, top_tweets, news_body, citation_urls')
-      .eq('token_id', tokenId)
-      .eq('language', language)
-      .single(),
-    supabase
-      .from('token_technical_analysis')
-      .select('token_name, positive_paragraphs, risk_paragraphs, indicators_snapshot, created_at, updated_at')
-      .eq('token_id', tokenId)
-      .eq('language', language)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single()
-  ]);
-
-  const { data, error } = summariesResult;
+  // Fetch everything from main_summaries (including technical analysis)
+  const { data, error } = await supabase
+    .from('main_summaries')
+    .select('token_name, description, insights, discussion_topics, sentiment_score, tweet_count, top_tweets, news_body, citation_urls, technical_positive_paragraphs, technical_risk_paragraphs, technical_indicators_snapshot, technical_updated_at')
+    .eq('token_id', tokenId)
+    .eq('language', language)
+    .single();
 
   if (error || !data || !data.insights) {
     return null;
@@ -200,18 +188,24 @@ export async function fetchInsights(
   const insights = data.insights as any;
   const sentimentScore = parseFloat(data.sentiment_score) || 0;
 
-  // Process technical analysis if available
+  // Process technical analysis from main_summaries columns
   let technicalAnalysis: TechnicalAnalysisResponse | null = null;
-  if (technicalResult.data && !technicalResult.error) {
-    const ta = technicalResult.data;
-    const indicators = ta.indicators_snapshot as any;
+  const hasPositiveParagraphs = data.technical_positive_paragraphs &&
+    Array.isArray(data.technical_positive_paragraphs) &&
+    data.technical_positive_paragraphs.length > 0;
+  const hasRiskParagraphs = data.technical_risk_paragraphs &&
+    Array.isArray(data.technical_risk_paragraphs) &&
+    data.technical_risk_paragraphs.length > 0;
+
+  if (hasPositiveParagraphs || hasRiskParagraphs || data.technical_indicators_snapshot) {
+    const indicators = data.technical_indicators_snapshot as any;
     technicalAnalysis = {
-      token_name: ta.token_name,
+      token_name: data.token_name,
       current_price: indicators?.current_price || 0,
-      positive_paragraphs: (ta.positive_paragraphs as string[]) || [],
-      risk_paragraphs: (ta.risk_paragraphs as string[]) || [],
+      positive_paragraphs: (data.technical_positive_paragraphs as string[]) || [],
+      risk_paragraphs: (data.technical_risk_paragraphs as string[]) || [],
       indicators: indicators?.indicators || null,
-      created_at: ta.created_at,
+      created_at: data.technical_updated_at || null,
     };
   }
 
@@ -236,7 +230,7 @@ export async function fetchInsights(
 
   return {
     token: insights.token || { id: String(tokenId), symbol: '', name: data.token_name },
-    updated_at: technicalResult.data?.updated_at || insights.updated_at || null,
+    updated_at: data.technical_updated_at || insights.updated_at || null,
     tldr: insights.tldr || null,
     what_is: {
       question: `What is ${insights.token?.symbol || ''}?`,
